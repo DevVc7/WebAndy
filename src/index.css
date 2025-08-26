@@ -165,7 +165,7 @@ body, #root, [data-reactroot] {
 }
 
 .msg-error {
-  @apply text-sm text-green-500 ml-2;
+  @apply text-sm text-red-500 ml-2;
 }
 
 

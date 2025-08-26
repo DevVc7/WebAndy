@@ -60,7 +60,7 @@ export const menusConfig = (): MenuConfigProps =>  {
               {
                 title: "Proveedores",
                 icon: Truck,
-                href: "/proveedores",
+                href: "/proveedor",
                 rol: "Todos",
               },
               {
@@ -88,7 +88,6 @@ export const menusConfig = (): MenuConfigProps =>  {
           icon: FileArchiveIcon,
           rol: "Todos",
           child:[
-
             {
               title: "Facturas/boletas",
               icon: FileSpreadsheet,

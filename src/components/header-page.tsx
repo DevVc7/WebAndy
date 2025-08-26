@@ -37,7 +37,7 @@ export default function HeaderPage({
             </Link>
           )}
 
-          <h1 className="text-4xl font-bold text-[#dc3545] text-pretty">
+          <h1 className="text-4xl font-bold text-green-600 text-pretty">
             {title}
           </h1>
         </div>
@@ -45,12 +45,12 @@ export default function HeaderPage({
         {descripcion && (
           <span className="text-gray-600 text-pretty">{descripcion}</span>
         )}
-      </div>
-      <div className="flex flex-row items-center gap-2">
+        </div>
+        <div className="flex flex-row items-center gap-2">
         {showLink && linkConfig && (
           <Link
             to={linkConfig.url}
-            className="bg-[#dc3545] text-white rounded-md px-4 py-1.5 flex gap-2 items-center justify-center w-full lg:w-auto"
+            className="bg-green-700 hover:bg-green-700/80 text-white rounded-md px-4 py-1.5 flex gap-2 items-center justify-center w-full lg:w-auto"
           >
             <PlusIcon size={20} />
             {linkConfig.title}
