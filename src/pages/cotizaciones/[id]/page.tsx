@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { SaveProveedores } from "@/interfaces/proveedores.interface";
+import { cn } from "@/lib/utils";
 import { ClipboardListIcon, PenBoxIcon, ShoppingCartIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -21,7 +22,7 @@ export default function CotizacionesIdPage() {
     
     const navigate = useNavigate();
     const { id } = useParams();
-
+    const [showPanel, setShowPanel] = useState<boolean>(false);
 
     const title = id === "nuevo" ? "Nueva Cotizacion" : "Editar Cotizacion";
     const [documento, setDocumento] = useState<{ value: number, label:string }[]>()
@@ -139,6 +140,10 @@ export default function CotizacionesIdPage() {
         }
     ]
 
+    const handleBoleta = () => {
+        setShowPanel(!showPanel)
+    }
+
 
     const onSubmit = async (values: FormSaveProveedorInputs) => {
         console.log(values)
@@ -152,209 +157,364 @@ export default function CotizacionesIdPage() {
     return (
         <>
             <HeaderPage title={title} descripcion="Información detallada del cliente." />
-                <form className="flex flex-col gap-5 mt-4" onSubmit={handleSubmit(onSubmit)}>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-lg font-light text-gray-500">Mantenimiento Proveedor</CardTitle>
-                            <hr />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex flex-col col-span-4 space-y-2 gap-2">
-                                <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="codigo">Cliente <span className="font-semibold text-red-600">*</span></Label>
-                                        <Input
-                                            id="name"
-                                            placeholder="Codigo"
-                                            {...register("codigo", { required: "El Codigo es requerido" })}
-                                            />
-                                            {errors.codigo && (
-                                            <p className="msg-error">{errors.codigo.message}</p>
-                                        )}
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="flex flex-col xl:flex-row gap-5 rounded-md min-h-full mt-3">
+                    <div className={cn("transition-all rounded-2xl w-full  border border-gray-100 h-fit", showPanel ? "xl:w-2/3 " : "")}>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-lg font-light text-gray-500">Mantenimiento Proveedor</CardTitle>
+                                <hr />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col col-span-4 space-y-2 gap-2">
+                                    <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+                                        <div className="flex flex-col space-y-2">
+                                            <Label htmlFor="codigo">Cliente <span className="font-semibold text-red-600">*</span></Label>
+                                            <Input
+                                                id="name"
+                                                placeholder="Codigo"
+                                                {...register("codigo", { required: "El Codigo es requerido" })}
+                                                />
+                                                {errors.codigo && (
+                                                <p className="msg-error">{errors.codigo.message}</p>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="direccion">Direccion</Label>
-                                        <Input
-                                            id="direccion"
-                                            placeholder="direccion"
-                                            {...register("direccion", { required: "La direccion es requerido" })}
-                                            />
-                                            {errors.direccion && (
-                                            <p className="msg-error">{errors.direccion.message}</p>
-                                        )}
+                                    <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+                                        <div className="flex flex-col space-y-2">
+                                            <Label htmlFor="direccion">Direccion</Label>
+                                            <Input
+                                                id="direccion"
+                                                placeholder="direccion"
+                                                {...register("direccion", { required: "La direccion es requerido" })}
+                                                />
+                                                {errors.direccion && (
+                                                <p className="msg-error">{errors.direccion.message}</p>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="numeroDoc">Tipo de Venta</Label>
-                                        <Controller
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="flex flex-col space-y-2">
+                                            <Label htmlFor="numeroDoc">Tipo de Venta</Label>
+                                            <Controller
+                                                    name="documento"
+                                                    control={control}
+                                                    rules={{ required: "El Tipo Documento es Requerido" }}
+                                                    render={({ field }) => (
+                                                    <Select
+                                                        {...field}
+                                                        options={documento}
+                                                        isClearable
+                                                        isSearchable
+                                                        className="basic-single"
+                                                        classNamePrefix="documento"
+                                                        placeholder="- Seleccionar -"
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col space-y-2">
+                                            <Label htmlFor="email">Vendedor</Label>
+                                            <Controller
+                                                    name="documento"
+                                                    control={control}
+                                                    rules={{ required: "El Tipo Documento es Requerido" }}
+                                                    render={({ field }) => (
+                                                    <Select
+                                                        {...field}
+                                                        options={documento}
+                                                        isClearable
+                                                        isSearchable
+                                                        className="basic-single"
+                                                        classNamePrefix="documento"
+                                                        placeholder="- Seleccionar -"
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col space-y-2">
+                                            <Label htmlFor="email">Atencion</Label>
+                                            <Input
+                                                id="email"
+                                                placeholder=""
+                                                {...register("email", { required: "El correo es requerido" })}
+                                                />
+                                                {errors.email && (
+                                                <p className="msg-error">{errors.email.message}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="flex flex-col space-y-2">
+                                            <Label htmlFor="numeroDoc">Moneda</Label>
+                                            <Controller
+                                                    name="documento"
+                                                    control={control}
+                                                    rules={{ required: "El Tipo Documento es Requerido" }}
+                                                    render={({ field }) => (
+                                                    <Select
+                                                        {...field}
+                                                        options={documento}
+                                                        isClearable
+                                                        isSearchable
+                                                        className="basic-single"
+                                                        classNamePrefix="documento"
+                                                        placeholder="- Seleccionar -"
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col space-y-2">
+                                            <Label htmlFor="email">Almacen</Label>
+                                            <Controller
                                                 name="documento"
                                                 control={control}
                                                 rules={{ required: "El Tipo Documento es Requerido" }}
                                                 render={({ field }) => (
-                                                <Select
-                                                    {...field}
-                                                    options={documento}
-                                                    isClearable
-                                                    isSearchable
-                                                    className="basic-single"
-                                                    classNamePrefix="documento"
-                                                    placeholder="- Seleccionar -"
-                                                />
-                                            )}
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="email">Vendedor</Label>
-                                        <Controller
-                                                name="documento"
-                                                control={control}
-                                                rules={{ required: "El Tipo Documento es Requerido" }}
-                                                render={({ field }) => (
-                                                <Select
-                                                    {...field}
-                                                    options={documento}
-                                                    isClearable
-                                                    isSearchable
-                                                    className="basic-single"
-                                                    classNamePrefix="documento"
-                                                    placeholder="- Seleccionar -"
-                                                />
-                                            )}
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="email">Atencion</Label>
-                                        <Input
-                                            id="email"
-                                            placeholder=""
-                                            {...register("email", { required: "El correo es requerido" })}
+                                                    <Select
+                                                        {...field}
+                                                        options={documento}
+                                                        isClearable
+                                                        isSearchable
+                                                        className="basic-single"
+                                                        classNamePrefix="documento"
+                                                        placeholder="- Seleccionar -"
+                                                    />
+                                                )}
                                             />
-                                            {errors.email && (
-                                            <p className="msg-error">{errors.email.message}</p>
-                                        )}
+                                        </div>
+                                        <div className="flex flex-col space-y-2">
+                                            <Label htmlFor="email">Tipo de Cambio</Label>
+                                            <Input
+                                                id="email"
+                                                placeholder="0"
+                                                {...register("email", { required: "El correo es requerido" })}
+                                                />
+                                                {errors.email && (
+                                                <p className="msg-error">{errors.email.message}</p>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="numeroDoc">Moneda</Label>
-                                        <Controller
-                                                name="documento"
-                                                control={control}
-                                                rules={{ required: "El Tipo Documento es Requerido" }}
-                                                render={({ field }) => (
-                                                <Select
-                                                    {...field}
-                                                    options={documento}
-                                                    isClearable
-                                                    isSearchable
-                                                    className="basic-single"
-                                                    classNamePrefix="documento"
-                                                    placeholder="- Seleccionar -"
-                                                />
-                                            )}
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="email">Almacen</Label>
-                                        <Controller
-                                            name="documento"
-                                            control={control}
-                                            rules={{ required: "El Tipo Documento es Requerido" }}
-                                            render={({ field }) => (
-                                                <Select
-                                                    {...field}
-                                                    options={documento}
-                                                    isClearable
-                                                    isSearchable
-                                                    className="basic-single"
-                                                    classNamePrefix="documento"
-                                                    placeholder="- Seleccionar -"
-                                                />
-                                            )}
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="email">Tipo de Cambio</Label>
-                                        <Input
-                                            id="email"
-                                            placeholder="0"
-                                            {...register("email", { required: "El correo es requerido" })}
-                                            />
-                                            {errors.email && (
-                                            <p className="msg-error">{errors.email.message}</p>
-                                        )}
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </CardContent>
-                        <CardContent>
-                            <HeaderPage title="" descripcion="Listado de todos los Productos :">
-                                <Button className="bg-[#858eb4] hover:bg-[#858eb4]/80 text-white rounded-md px-4 py-1.5 flex gap-2 items-center justify-center w-full lg:w-auto cursor-pointer">
-                                    <ShoppingCartIcon />Finalizar
-                                </Button>
-                                <Button className="bg-[#f49c8a] hover:bg-[#f49c8a]/80 text-white rounded-md px-4 py-1.5 flex gap-2 items-center justify-center w-full lg:w-auto cursor-pointer">
-                                    <ClipboardListIcon />Vaciar Listado
-                                </Button>
-                            </HeaderPage>
-                            <div className="mt-5">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                        <TableHead className="w-[100px]">Codigo</TableHead>
-                                        <TableHead>Producto</TableHead>
-                                        <TableHead>Cantidad</TableHead>
-                                        <TableHead>Unidad</TableHead>
-                                        <TableHead>Precio</TableHead>
-                                        <TableHead>V.Venta</TableHead>
-                                        <TableHead>T.Venta</TableHead>
-                                        <TableHead className="text-center">Acciones</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {productos.map((prod) => (
-                                            <TableRow key={prod.codigo}>
-                                            <TableCell>{prod.codigo}</TableCell>
-                                            <TableCell>{prod.producto}</TableCell>
-                                            <TableCell>{prod.cantidad}</TableCell>
-                                            <TableCell>{prod.unidad}</TableCell>
-                                            <TableCell>{prod.precio}</TableCell>
-                                            <TableCell>{prod.vVenta}</TableCell>
-                                            <TableCell>{prod.tVenta}</TableCell>
-                                            <TableCell className="flex gap-2">
-                                                <Button
-                                                    variant="link"
-                                                    className="text-amber-400"
-                                                    size="sm"
-                                                    onClick={() => console.log("Editar", prod.codigo)}
-                                                >
-                                                    <PenBoxIcon />
-                                                </Button>
-                                                <Button
-                                                    variant="link"
-                                                    className="text-red-400"
-                                                    size="sm"
-                                                    onClick={() => console.log("Eliminar", prod.codigo)}
-                                                >
-                                                    <Trash2Icon />
-                                                </Button>
-                                            </TableCell>
+                            </CardContent>
+                            <CardContent>
+                                <HeaderPage title="" descripcion="Listado de todos los Productos :">
+                                    <Button className="bg-[#858eb4] hover:bg-[#858eb4]/80 text-white rounded-md px-4 py-1.5 flex gap-2 items-center justify-center w-full lg:w-auto cursor-pointer">
+                                        <ShoppingCartIcon />Finalizar
+                                    </Button>
+                                    <Button className="bg-[#f49c8a] hover:bg-[#f49c8a]/80 text-white rounded-md px-4 py-1.5 flex gap-2 items-center justify-center w-full lg:w-auto cursor-pointer">
+                                        <ClipboardListIcon />Vaciar Listado
+                                    </Button>
+                                </HeaderPage>
+                                <div className="mt-5">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                            <TableHead className="w-[100px]">Codigo</TableHead>
+                                            <TableHead>Producto</TableHead>
+                                            <TableHead>Cantidad</TableHead>
+                                            <TableHead>Unidad</TableHead>
+                                            <TableHead>Precio</TableHead>
+                                            <TableHead>V.Venta</TableHead>
+                                            <TableHead>T.Venta</TableHead>
+                                            <TableHead className="text-center">Acciones</TableHead>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {productos.map((prod) => (
+                                                <TableRow key={prod.codigo}>
+                                                <TableCell>{prod.codigo}</TableCell>
+                                                <TableCell>{prod.producto}</TableCell>
+                                                <TableCell>{prod.cantidad}</TableCell>
+                                                <TableCell>{prod.unidad}</TableCell>
+                                                <TableCell>{prod.precio}</TableCell>
+                                                <TableCell>{prod.vVenta}</TableCell>
+                                                <TableCell>{prod.tVenta}</TableCell>
+                                                <TableCell className="flex gap-2">
+                                                    <Button
+                                                        variant="link"
+                                                        className="text-amber-400"
+                                                        size="sm"
+                                                        type="button"
+                                                        onClick={() => handleBoleta()}
+                                                    >
+                                                        <PenBoxIcon />
+                                                    </Button>
+                                                    <Button
+                                                        variant="link"
+                                                        className="text-red-400"
+                                                        size="sm"
+                                                        onClick={() => console.log("Eliminar", prod.codigo)}
+                                                    >
+                                                        <Trash2Icon />
+                                                    </Button>
+                                                </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <CardFooter className="mt-4 flex items-center justify-end gap-2">
+                            <Button variant="secondary" className="border-2" onClick={() => navigate("/cotizaciones")}>Cancelar</Button>
+                            <Button type="submit"  variant="destructive">Guardar</Button>
+                        </CardFooter>
+                    </div>
+                    {
+                        showPanel && (
+                            <div className="h-fit rounded-2xl w-full xl:w-1/3 border border-gray-100">
+                            <Card>
+                                <CardContent>
+                                    <div className="flex flex-col col-span-1 space-y-2 gap-2">
+                                        <div className="grid grid-cols-1 md:grid-cols-1 gap-3 text-sm">
+                                            <div className="flex flex-col space-y-2">
+                                                <Label htmlFor="codigo">Condicion Venta<span className="font-semibold text-red-600">*</span></Label>
+                                                <Controller
+                                                        name="documento"
+                                                        control={control}
+                                                        rules={{ required: "El Tipo Documento es Requerido" }}
+                                                        render={({ field }) => (
+                                                        <Select
+                                                            {...field}
+                                                            options={documento}
+                                                            isClearable
+                                                            isSearchable
+                                                            className="basic-single"
+                                                            classNamePrefix="documento"
+                                                            placeholder="- Seleccionar -"
+                                                        />
+                                                    )}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col space-y-2">
+                                                <Label htmlFor="codigo">Documento<span className="font-semibold text-red-600">*</span></Label>
+                                                <Controller
+                                                        name="documento"
+                                                        control={control}
+                                                        rules={{ required: "El Tipo Documento es Requerido" }}
+                                                        render={({ field }) => (
+                                                        <Select
+                                                            {...field}
+                                                            options={documento}
+                                                            isClearable
+                                                            isSearchable
+                                                            className="basic-single"
+                                                            classNamePrefix="documento"
+                                                            placeholder="- Seleccionar -"
+                                                        />
+                                                    )}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col space-y-2">
+                                                <Label htmlFor="codigo">Punto Emision<span className="font-semibold text-red-600">*</span></Label>
+                                                <Controller
+                                                        name="documento"
+                                                        control={control}
+                                                        rules={{ required: "El Tipo Documento es Requerido" }}
+                                                        render={({ field }) => (
+                                                        <Select
+                                                            {...field}
+                                                            options={documento}
+                                                            isClearable
+                                                            isSearchable
+                                                            className="basic-single"
+                                                            classNamePrefix="documento"
+                                                            placeholder="- Seleccionar -"
+                                                        />
+                                                    )}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col space-y-2">
+                                                <Label htmlFor="email">Numero</Label>
+                                                <Input
+                                                    id="email"
+                                                    placeholder=""
+                                                    {...register("email", { required: "El correo es requerido" })}
+                                                    />
+                                                    {errors.email && (
+                                                    <p className="msg-error">{errors.email.message}</p>
+                                                )}
+                                            </div>
+                                            <div className="flex flex-col space-y-2">
+                                                <Label htmlFor="email">Fecha</Label>
+                                                <Input
+                                                    id="email"
+                                                    type="date"
+                                                    placeholder=""
+                                                    {...register("email", { required: "El correo es requerido" })}
+                                                    />
+                                                    {errors.email && (
+                                                    <p className="msg-error">{errors.email.message}</p>
+                                                )}
+                                            </div>
+                                            <div className="flex flex-col space-y-2">
+                                                <Label htmlFor="email">Dias Vigentes</Label>
+                                                <Input
+                                                    id="email"
+                                                    placeholder=""
+                                                    {...register("email", { required: "El correo es requerido" })}
+                                                    />
+                                                    {errors.email && (
+                                                    <p className="msg-error">{errors.email.message}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-1 gap-3 text-sm">
+                                            <div className="flex flex-col space-y-2">
+                                                <Label htmlFor="codigo">Condicion Venta<span className="font-semibold text-red-600">*</span></Label>
+                                                <Controller
+                                                        name="documento"
+                                                        control={control}
+                                                        rules={{ required: "El Tipo Documento es Requerido" }}
+                                                        render={({ field }) => (
+                                                        <Select
+                                                            {...field}
+                                                            options={documento}
+                                                            isClearable
+                                                            isSearchable
+                                                            className="basic-single"
+                                                            classNamePrefix="documento"
+                                                            placeholder="- Seleccionar -"
+                                                        />
+                                                    )}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col space-y-2 mt-3 text-sm ">
+                                                <div className="flex items-center justify-between">
+                                                    <span>OPE.GRAVADAS</span>
+                                                    <span>14567.8</span>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span>OPE.INAFECTAS</span>
+                                                    <span>0</span>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span>OPE.EXONERADAS</span>
+                                                    <span>0</span>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span>SUBTOTAL</span>
+                                                    <span>14567.8</span>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span>IGV{"(18%)"}</span>
+                                                    <span>2622.2</span>
+                                                </div>
+                                                <div className="flex items-center justify-between text-red-500">
+                                                    <span>TOTAL</span>
+                                                    <span>$/.17190</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
                             </div>
-                        </CardContent>
-                    </Card>
-                    <CardFooter className="flex flex-row items-center justify-end gap-2">
-                        <Button variant="secondary" className="border-2" onClick={() => navigate("/cotizaciones")}>Cancelar</Button>
-                        <Button type="submit"  variant="destructive">Guardar</Button>
-                    </CardFooter>
-                </form>
-
+                        )
+                    }
+                </div>
+            </form>
         </>
     );
 }
